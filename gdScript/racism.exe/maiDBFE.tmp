@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dojjxkpjul40d"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_h4ffv"]
+
+[node name="main" type="Label"]
+offset_right = 40.0
+offset_bottom = 23.0
+script = ExtResource("1_h4ffv")
