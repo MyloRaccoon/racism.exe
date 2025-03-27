@@ -21,7 +21,7 @@ This was my first game when I was learning python in high-school. Now I remake t
  - C#
 ### Maybe if you pay me
  - Kotlin
- - PHP
+ - PHP (is it possible even ?)
  - JS
 
 Don't hesitate to send me your favorite language, as weird as it is, i'll maybe add it in this list. 
