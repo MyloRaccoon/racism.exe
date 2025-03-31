@@ -13,8 +13,8 @@ This was my first game when I was learning python in high-school. Now I remake t
  - Calculator Python
  - Scratch
  - Gdscript (godot)
-### Current
  - Lua
+### Current
 ### Next to come
  - Rust
  - Ruby
