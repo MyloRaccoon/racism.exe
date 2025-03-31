@@ -1,84 +1,116 @@
 local height = 10
 local width = 30
 
-local empty_char = "0"
-local wall_char = "0"
-local player_char = "P"
-local enemy_char = "E"
-local coin_char = "C"
+local empty_char = "□"
+local wall_char = "█"
+local player_char = "☻"
+local enemy_char = "☺"
+local coin_char = "$"
 
 local init_player_x = 1
 local init_player_y = 1
 local player_speed = 1
-local init_enemy_x = height - 1
-local init_enemy_y = width - 1
+local init_enemy_x = width - 1
+local init_enemy_y = height - 1
 local enemy_speed = 1
 
-Entity = {
-	x = 0,
-	y = 0,
-	speed = 1,
-}
+local score = 0
 
-function Entity:create(o)
-	o.parent = self
-	return o
+local player = { x = init_player_x, y = init_player_y, speed = player_speed }
+
+function player:up()
+	if self.y > 1 then
+		self.y = self.y - self.speed
+	end
 end
 
-function Entity:up()
-	self.y = self.y - self.speed
+function player:down()
+	if self.y < height-1 then
+		self.y = self.y + self.speed
+	end
 end
 
-function Entity:down()
-	self.y = self.y + self.speed
+function player:right()
+	if self.x < width-1 then
+		self.x = self.x + self.speed
+	end
 end
 
-function Entity:left()
-	self.x = self.x - self.speed
+function player:left()
+	if self.x > 1 then
+		self.x = self.x - self.speed
+	end
 end
 
-function Entity:right()
-	self.x = self.x + self.speed
+function player:move(char)
+	if char == 'z' then
+		self:up()
+	elseif char == 's' then
+		self:down()
+	elseif char == 'd' then
+		self:right()
+	elseif char == 'q' then
+		self:left()
+	end
 end
 
-local player = Entity:create{ x = init_player_x, y = init_player_y, speed = player_speed }
 
-
-local enemy = Entity:create{ x = init_enemy_x, y = init_enemy_y, speed = enemy_speed }
+local enemy = { x = init_enemy_x, y = init_enemy_y, speed = enemy_speed, can_move = true }
 
 function enemy:move()
 	local dist_x = math.abs(player.x - self.x)
 	local dist_y = math.abs(player.y - self.y)
 	if dist_x >= dist_y then
 		if self.x > player.x then
-			-- find a way to go up, need to look up how tf you inherit in this language
+			if self.x > 1 then
+				self.x = self.x - self.speed
+			end
 		else
-			-- find a way to go up, need to look up how tf you inherit in this language
+			if self.x < width-1 then
+				self.x = self.x + self.speed
+			end
 		end
 	else
 		if self.y > player.y then
-			-- find a way to go up, need to look up how tf you inherit in this language
+			if self.y > 1 then
+				self.y = self.y - self.speed
+			end
 		else
-			-- find a way to go up, need to look up how tf you inherit in this language
+			if self.y < height-1 then
+				self.y = self.y + self.speed
+			end
 		end
 	end
 end
 
+function enemy:check()
+	local dist_x = math.abs(self.x - player.x)
+	local dist_y = math.abs(self.y - player.y)
 
-local coin = Entity:create{ x = 0, y = 0 }
+	return dist_x <= 1 and dist_y <= 1
+end
+
+
+local coin = { x = 0, y = 0 }
 
 function coin:tp()
 	self.x = math.random(1, width-1)
 	self.y = math.random(1, height-1)
 end
 
+function coin:check()
+	if self.x == player.x and self.y == player.y then
+		score = score + 1
+		self:tp()
+	end
+end
 
 
 local function print_board()
 	for y = 0, height do
 		local line = ""
 		for x = 0, width do
-			if x == 0 or y == 0 or x == height or y == width then
+			if x == 0 or y == 0 or x == width or y == height then
 				line = line .. wall_char
 			elseif x == player.x and y == player.y then
 				line = line .. player_char
@@ -94,8 +126,39 @@ local function print_board()
 	end
 end
 
+local function is_move_command( move )
+	return move == "z" or move == "q" or move == "s" or move == "d"
+end
+
+local playing = true
+
 coin:tp()
-print_board()
-enemy:move()
-coin:tp()
-print_board()
+
+while playing do
+	print_board()
+
+	if enemy:check() then
+		print(string.format("You ded with %d$", score))
+		playing = false
+	end
+
+	print(string.format("score = %d$", score))
+	print("Type a command: ")
+	local command = io.read(1)
+
+	if is_move_command(command) then
+		player:move(command)
+
+		enemy.can_move = not enemy.can_move
+		if enemy.can_move then
+			enemy:move()
+		end
+
+	elseif command == 'e' then
+		playing = false
+	elseif command == 'h' then
+		print("(z,q,s,d) to move, e (or ctrl-c) to exit")
+	end
+
+	coin:check()
+end
