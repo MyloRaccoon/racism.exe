@@ -14,9 +14,10 @@ This was my first game when I was learning python in high-school. Now I remake t
  - Scratch
  - Gdscript (godot)
  - Lua
+ - Rust
 ### Current
 ### Next to come
- - Rust
+ - Squirrel
  - Ruby
  - C#
 ### Maybe if you pay me
