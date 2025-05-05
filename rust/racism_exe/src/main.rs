@@ -8,7 +8,7 @@ fn build_board(width: u32, height: u32, player: Player, enemy: Enemy, coin: Coin
         for x in 0 .. width {
 
             if x == 0 || y == 0 || x == width-1 || y == height-1 {
-                res += "0"
+                res += "█"
             } else if x == player.x && y == player.y {
                 res += &player.char;
             } else if x == enemy.x && y == enemy.y {
@@ -27,8 +27,8 @@ fn build_board(width: u32, height: u32, player: Player, enemy: Enemy, coin: Coin
 }
 
 fn main() -> io::Result<()> {
-    const WIDTH: u32 = 10;
-    const HEIGHT: u32 = 10;
+    const WIDTH: u32 = 30;
+    const HEIGHT: u32 = 15;
     let mut player = Player::default();
     let mut enemy = Enemy::new(WIDTH, HEIGHT);
     let mut score = 0;
@@ -39,6 +39,14 @@ fn main() -> io::Result<()> {
     while playing {
 
         println!("{}", build_board(WIDTH, HEIGHT, player.clone(), enemy.clone(), coin.clone()));
+
+        if enemy.clone().is_colliding_player(player.clone()) {
+            println!("You loose !");
+            println!("final score: {score}$");
+            playing = false;
+            continue;
+        }
+
         println!("your score: {}$", score);
         println!("Please enter a command : ");
 
@@ -55,7 +63,7 @@ fn main() -> io::Result<()> {
             println!("\"{buffer}\" is not a command. (z/q/s/d to move, e to exit)");
         } else {
             coin.process(&mut score, player.clone(), WIDTH, HEIGHT);
-            // enemy.process(player.clone(), WIDTH, HEIGHT);
+            enemy.process(player.clone(), WIDTH, HEIGHT);
         }
     }
 

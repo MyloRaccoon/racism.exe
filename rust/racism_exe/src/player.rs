@@ -12,7 +12,7 @@ impl Default for Player {
 		Self {
 			x: 1,
 			y: 1,
-			char: "P".to_string(),
+			char: "☻".to_string(),
 		}
 	}
 }

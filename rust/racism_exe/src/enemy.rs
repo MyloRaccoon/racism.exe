@@ -4,6 +4,7 @@ use crate::{miscellaneous::Entity, player::Player};
 pub struct Enemy {
 	pub x: u32,
 	pub y: u32,
+	can_move: bool,
 	pub char: String,
 }
 
@@ -12,25 +13,37 @@ impl Enemy {
 		Self {
 			x: width-2,
 			y: height-2,
-			char: "E".to_string(),
+			can_move: false,
+			char: "☺".to_string(),
 		}
 	}
 
+	pub fn is_colliding_player(self, player: Player) -> bool {
+		let dist_x = (self.x as i32 - player.x as i32).abs();
+		let dist_y = (self.y as i32 - player.y as i32).abs();
+		dist_x <= 1 && dist_y <= 1 
+	}
+
 	pub fn process(&mut self, player: Player, width: u32, height: u32) {
-		let dist_x = i32::abs((self.x - player.x).try_into().unwrap());
-		let dist_y = i32::abs((self.x - player.x).try_into().unwrap());
-		if dist_x >= dist_y {
-			if self.x > player.x {
-				self.left();
+		if self.can_move {
+			self.can_move = false;
+			let dist_x = (self.x as i32 - player.x as i32).abs();
+			let dist_y = (self.y as i32 - player.y as i32).abs();
+			if dist_x >= dist_y {
+				if self.x > player.x {
+					self.left();
+				} else {
+					self.right(width);
+				}
 			} else {
-				self.right(width);
+				if self.y > player.y {
+					self.up();
+				} else {
+					self.down(height);
+				}
 			}
 		} else {
-			if self.y > player.y {
-				self.up();
-			} else {
-				self.down(height);
-			}
+			self.can_move = true;
 		}
 	}
 }
