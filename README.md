@@ -17,12 +17,14 @@ This was my first game when I was learning python in high-school. Now I remake t
  - Rust
 ### Current
 ### Next to come
- - Squirrel
  - Ruby
  - C#
 ### Maybe if you pay me
  - Kotlin
  - PHP (is it possible even ?)
  - JS
+ ### Impossible
+ - Squirrel
+ 	This is with a lot of sadness that I have to put this language here as it doesn't have any proper solution to read inputs from user :'(
 
 Don't hesitate to send me your favorite language, as weird as it is, i'll maybe add it in this list. 
